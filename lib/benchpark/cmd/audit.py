@@ -28,6 +28,10 @@ def audit_experiment(exp_cls):
         # Caliper is an abstract class, and is never directly instantiated
         return []
 
+    if exp_cls.__name__ == "Scorep":
+        # Scorep is an abstract class, and is never directly instantiated
+        return []
+
     errors = list()
 
     for method in required_methods:

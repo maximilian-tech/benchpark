@@ -86,6 +86,22 @@ def main():
     )
     cali_bm_str = str(cali_benchmarks.stdout, "utf-8")
     cali_bm = cali_bm_str.replace(" ", "").replace("\t", "").split("\n")
+    # Get benchmarks that have scorep enabled
+    scorep_benchmarks = subprocess.run(
+        [
+            "../bin/benchpark",
+            "list",
+            "modifiers",
+            "--name",
+            "scorep",
+            "--experiments",
+            "--no-title",
+        ],
+        check=True,
+        capture_output=True,
+    )
+    scorep_bm_str = str(scorep_benchmarks.stdout, "utf-8")
+    scorep_bm = scorep_bm_str.replace(" ", "").replace("\t", "").split("\n")
     # Get available programming models for each benchmark
     pmodels_cmd = subprocess.run(
         [
@@ -124,6 +140,12 @@ def main():
             main_dict[bmark]["instrumented-caliper"] = True
         else:
             main_dict[bmark]["instrumented-caliper"] = False
+
+        if bmark in scorep_bm:
+            main_dict[bmark]["instrumented-scorep"] = True
+        else:
+            main_dict[bmark]["instrumented-scorep"] = False
+
     for bmark in benchmarks:
         main_dict[bmark]["programming-model"] = []
         main_dict[bmark]["scaling-experiments"] = []

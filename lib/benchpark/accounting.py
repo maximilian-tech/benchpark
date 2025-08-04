@@ -18,6 +18,7 @@ exp_dict = {
     "ThroughputScaling": "throughput",
     "WeakScaling": "weak",
     "Caliper": "caliper",
+    "Scorep": "scorep",
     "ScalingMode.Strong": "scaling=strong",
     "ScalingMode.Weak": "scaling=weak",
     "ScalingMode.Throughput": "scaling=throughput",
@@ -27,8 +28,7 @@ sys_dict = {
     "CudaSystem": "cuda",
     "ROCmSystem": "rocm",
 }
-non_experiments = ["Caliper", "Affinity"]
-
+non_experiments = ["Caliper", "Affinity", "Scorep"] # Class names of moifiers
 
 def benchpark_experiments(exclude_variants=non_experiments):
     source_dir = benchpark.paths.benchpark_root
