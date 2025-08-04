@@ -1,0 +1,28 @@
+# Copyright 2025 TU Dresden
+#
+# SPDX-License-Identifier: Apache-2.0
+system_definition:
+  name: NEC-zen2-Infiniband
+  integrator:
+    vendor: NEC
+    name: 
+  processor:
+    vendor: AMD
+    name: Epyc7702
+    ISA: x86_64
+    uArch: zen2
+  accelerator:
+    vendor: 
+    name:
+    ISA:
+    uArch:
+  interconnect:
+    vendor: Mellanox
+    name: HDR100InfiniBand
+  systems-tested:
+    romeo:
+      os: RHEL
+      scheduler: slurm
+      compiler: gcc
+      runtime:
+      mpi: openmpi

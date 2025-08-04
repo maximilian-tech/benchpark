@@ -1,0 +1,32 @@
+# Copyright 2025 TU Dresden
+#
+# SPDX-License-Identifier: Apache-2.0
+system_definition:
+  name: Eviden-sapphirerapids-Infiniband
+  integrator:
+    vendor: Eviden
+    name: BullSequanaX2140
+  processor:
+    vendor: Intel
+    name: XeonPlatinum8470
+    ISA: x86_64
+    uArch: sapphirerapids
+  accelerator:
+    vendor: 
+    name:
+    ISA:
+    uArch:
+  interconnect:
+    vendor: Mellanox
+    name: HDR100InfiniBand
+  systems-tested:
+    barnard:
+      os: RHEL
+      scheduler: slurm
+      compiler: gcc
+      runtime:
+      mpi: openmpi
+  top500-system-instances:
+    barnard:
+      benchpark_system: barnard
+      top500: <https://top500.org/system/180137/>
