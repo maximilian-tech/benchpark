@@ -10,6 +10,7 @@ from benchpark.cuda import CudaExperiment
 from benchpark.rocm import ROCmExperiment
 from benchpark.new_scaling import ScalingMode, Scaling
 from benchpark.caliper import Caliper
+from benchpark.scorep import Scorep
 
 
 class Kripke(
@@ -19,6 +20,7 @@ class Kripke(
     ROCmExperiment,
     Scaling(ScalingMode.Strong, ScalingMode.Weak, ScalingMode.Throughput),
     Caliper,
+    Scorep,
 ):
     variant(
         "workload",

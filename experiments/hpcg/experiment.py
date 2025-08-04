@@ -9,6 +9,7 @@ from benchpark.scaling import StrongScaling
 from benchpark.scaling import WeakScaling
 from benchpark.openmp import OpenMPExperiment
 from benchpark.caliper import Caliper
+from benchpark.scorep import Scorep
 
 
 class Hpcg(
@@ -17,6 +18,7 @@ class Hpcg(
     WeakScaling,
     OpenMPExperiment,
     Caliper,
+    Scorep
 ):
 
     variant(

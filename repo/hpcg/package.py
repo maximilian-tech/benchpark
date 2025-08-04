@@ -24,12 +24,12 @@ class Hpcg(CMakePackage):
     
     variant("openmp", default=True, description="Enable OpenMP support")
     variant("caliper", default=False, description="Enable Caliper support")
-    
+    variant("scorep", default=False, description="Enable Score-P support")
+
     depends_on("mpi@1.1:")
-    depends_on("caliper", when="+caliper") 
-    depends_on("adiak", when="+caliper") 
-
-
+    depends_on("caliper", when="+caliper")
+    depends_on("adiak", when="+caliper")
+    depends_on("scorep@9.99", when="+scorep")
     def cmake_args(self):
         build_targets = ["all", "docs"]
         install_targets = ["install", "docs"]
@@ -38,5 +38,13 @@ class Hpcg(CMakePackage):
             self.define_from_variant("HPCG_ENABLE_CALIPER", "caliper"),
             self.define_from_variant("HPCG_ENABLE_OPENMP", "openmp"),
         ]
-        
+        if "+scorep" in self.spec:
+            mapping = {
+                "CMAKE_C":"mpicc",
+                "CMAKE_CXX": "mpic++",
+                "CMAKE_Fortran": "mpif90",
+            }
+            for k,v in mapping.items():
+                args.append(f"-D{k}_COMPILER=scorep-{v}")
+
         return args
