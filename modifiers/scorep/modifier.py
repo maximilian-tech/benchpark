@@ -40,10 +40,10 @@ class Scorep(BasicModifier):
     )
 
     env_var_modification(
-        "SCOREP_WRAPPER_INSTRUMENTER_WRAPPER",
+        "SCOREP_WRAPPER_INSTRUMENTER_FLAGS",
         "--nocompiler",
         when=True,
-        modes=["SCOREP_WRAPPER_INSTRUMENTER_WRAPPER"],
+        modes=["SCOREP_WRAPPER_INSTRUMENTER_FLAGS"],
     )
 
     def modify_experiment(self, app):
@@ -58,51 +58,6 @@ class Scorep(BasicModifier):
         description="Profile CUDA API functions",
     )
 
-    # add_mode(
-    #     mode_name="topdown-all",
-    #     mode_option="topdown.all",
-    #     description="Top-down analysis for Intel CPUs (all levels)",
-    # )
-
-    # Write out the metadata file once all variables are resolved
-    # register_phase("build_metadata", pipeline="setup", run_after=["make_experiments"])
-    #
-    # def _build_metadata(self, workspace, app_inst):
-    #     """Write the caliper metadata to json"""
-    #
-    #     cali_metadata = {}
-    #
-    #     # system metadata
-    #     system_metadata = [
-    #         "sys_cores_per_node",  # required
-    #         "scheduler",  # required
-    #         "rocm_arch",
-    #         "cuda_arch",
-    #         "sys_cores_os_reserved_per_node",
-    #         "sys_cores_os_reserved_per_node_list",
-    #         "sys_gpus_per_node",
-    #         "sys_mem_per_node",
-    #         "system_site",
-    #     ]
-    #     for key in system_metadata:
-    #         # Certain keys not required or may not be present
-    #         if key in app_inst.variables.keys():
-    #             cali_metadata[key] = app_inst.variables[key]
-    #
-    #     # Load the Caliper metadata variable from ramble.yaml
-    #     experiment_metadata = app_inst.expander.expand_var_name(
-    #         "caliper_metadata", typed=True, merge_used_stage=False
-    #     )
-    #     app_inst.expander.flush_used_variable_stage()
-    #     # rebuild dictionary with expanded variables
-    #     for key, val in experiment_metadata.items():
-    #         cali_metadata[key] = app_inst.expander.expand_var(val)
-    #
-    #     # Write to the Caliper metadata file
-    #     cali_metadata_file = self.expander.expand_var(self._caliper_metadata_file)
-    #     with open(cali_metadata_file, "w") as f:
-    #         f.write(json.dumps(cali_metadata))
-
-    #software_spec("scorep", pkg_spec="scorep")
+    software_spec("scorep", pkg_spec="scorep")
 
     required_package("scorep")

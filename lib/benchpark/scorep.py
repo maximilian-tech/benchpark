@@ -37,7 +37,7 @@ class Scorep:
 
         def compute_package_section(self):
             # set package versions
-            scorep_version = "9.2"
+            scorep_version = "9.3.0-dev-MR300"
 
             # get system config options
             # TODO: Get compiler/mpi/package handles directly from system.py
@@ -49,9 +49,10 @@ class Scorep:
             # Set How Score-P shall be installed
             if not self.spec.satisfies("scorep=none"):
                 package_specs["scorep"] = {
-                    "pkg_spec": f"scorep",#@{scorep_version}",
-                    "compiler": system_specs["compiler"],
+                    "pkg_spec": f"scorep@{scorep_version}",
+                    #"compiler": system_specs["compiler"],
                 }
+                pass
 
             return {
                 "packages": {k: v for k, v in package_specs.items() if v},

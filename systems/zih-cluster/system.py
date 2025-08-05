@@ -52,27 +52,49 @@ class ZihCluster(System):
 
         self.scheduler = "slurm"
         attrs = self.id_to_resources.get(self.spec.variants["cluster"][0])
+        print(f"{self.spec.variants["cluster"]=}")
+        print(f"{attrs=}")
         for k, v in attrs.items():
             setattr(self, k, v)
     
-    @property
+    
+    def _is(self, cluster):
+        if self.spec.variants["cluster"][0] == cluster:
+            return True
+        return False
+    
+
+    @staticmethod
     def _romeo_packages() -> dict:
         selections = {
             "packages": {
-                "fftw": {
+                "pkgconf": {
+                    "externals": [ {"spec": "pkgconf@2.2.0 arch=linux-rhel9-zen2", "modules": ["pkgconf/2.2.0"]} ],
                     "buildable": False,
-                    "externals": [
-                        {
-                            "spec": "fftw@3.3.10",
-                            "prefix": "/software/rome/r25.06/FFTW/3.3.10-GCC-13.3.0",
-                        }
-                    ],
+                },
+                "binutils": {
+                    "externals": [ {"spec": "binutils@2.42.0%gcc@13.3.0 arch=linux-rhel9-zen2", "modules": ["binutils/2.42"]} ],
+                    "buildable": False,
+                },
+                "fftw": {
+                    "externals": [ {"spec": "fftw@3.3.10 arch=linux-rhel9-zen2", "modules": ["FFTW/3.3.10"]} ],
+                    "buildable": False,
                 },
                 "cmake": {
-                    "externals": [
-                        {"spec": "cmake@3.29.3", "prefix": "/software/rome/r25.06/CMake/3.29.3-GCCcore-13.3.0"},
-                    ],
+                    "externals": [{"spec": "cmake@3.29.3 arch=linux-rhel9-zen2", "modules": ["CMake/3.29.3"]} ],
                     "buildable": False,
+                },
+                "python": {
+                    "externals": [{"spec": "python@3.12.3 arch=linux-rhel9-zen2","modules": ["Python/3.12.3"]}],
+                    #"buildable": False,
+                },
+                "hwloc": {
+                    "externals": [{"spec": "hwloc@2.10.0 arch=linux-rhel9-zen2", "modules": ["hwloc/2.10.0"]}],
+                    "buildable": False,
+                },
+                "mpi": {
+                    "buildable": False,
+                    "externals": [{"spec": "openmpi@5.0.3%gcc@13.3.0 arch=linux-rhel9-zen2","modules": ["OpenMPI/5.0.3"],}],
                 },
                 "tar": {
                     "externals": [{"spec": "tar@1.34", "prefix": "/usr"}],
@@ -82,114 +104,78 @@ class ZihCluster(System):
                     "externals": [{"spec": "autoconf@2.69", "prefix": "/usr"}],
                     "buildable": False,
                 },
-                "python": {
-                    "externals": [
-                        {
-                            "spec": "python@3.12.3",
-                            "prefix": "/software/rome/r25.06/Python/3.12.3-GCCcore-13.3.0/",
-                        },
-                    ],
-                    "buildable": False,
-                },
-                "hwloc": {
-                    "externals": [{"spec": "hwloc@2.10.0", "prefix": "/software/rome/r25.06/hwloc/2.10.0-GCCcore-13.3.0/"}],
-                    "buildable": False,
-                },
                 "gmake": {
                     "externals": [{"spec": "gmake@4.3.0", "prefix": "/usr"}],
                     "buildable": False,
                 },
-                "mpi": {
-                    "buildable": False,
-                    "externals": [
-                        {
-                            "spec": "openmpi@5.0.3",
-                            "prefix": "/software/rome/r25.06/OpenMPI/5.0.3-GCC-13.3.0/",
-                            #"extra_attributes": {
-                                #"ldflags": "-L/usr/tce/packages/mvapich2/mvapich2-2.3.7-gcc-12.1.1/lib -lmpi"
-                            #},
-                        }
-                    ],
-                }
             }
         }
 
         return selections
         
-    @property
+
+    @staticmethod
     def _barnard_packages() -> dict:
         selections = {
             "packages": {
-                "fftw": {
+                "pkgconf": {
+                    "externals": [ {"spec": "pkgconf@2.2.0 arch=linux-rhel8-sapphirerapids", "modules": ["pkgconf/2.2.0"]} ],
                     "buildable": False,
-                    "externals": [
-                        {
-                            "spec": "fftw@3.3.10",
-                            "prefix": "/software/rapids/r25.06/FFTW/3.3.10-GCC-13.3.0",
-                        }
-                    ],
+                },
+                "binutils": {
+                    "externals": [ {"spec": "binutils@2.42.0%gcc@13.3.0 arch=linux-rhel8-sapphirerapids", "modules": ["binutils/2.42"]} ],
+                    "buildable": False,
+                },
+                "fftw": {
+                    "externals": [ {"spec": "fftw@3.3.10 arch=linux-rhel8-sapphirerapids", "modules": ["FFTW/3.3.10"]} ],
+                    "buildable": False,
                 },
                 "cmake": {
-                    "externals": [
-                        {"spec": "cmake@3.29.3", "prefix": "/software/rapids/r25.06/CMake/3.29.3-GCCcore-13.3.0"},
-                    ],
-                    "buildable": False,
-                },
-                "tar": {
-                    "externals": [{"spec": "tar@1.30", "prefix": "/usr"}],
-                    "buildable": False,
-                },
-                "autoconf": {
-                    "externals": [{"spec": "autoconf@2.69", "prefix": "/usr"}],
+                    "externals": [{"spec": "cmake@3.29.3 arch=linux-rhel8-sapphirerapids", "modules": ["CMake/3.29.3"]} ],
                     "buildable": False,
                 },
                 "python": {
-                    "externals": [
-                        {
-                            "spec": "python@3.12.3",
-                            "prefix": "/software/rapids/r25.06/Python/3.12.3-GCCcore-13.3.0/",
-                        },
-                    ],
-                    "buildable": False,
+                    "externals": [{"spec": "python@3.12.3 arch=linux-rhel8-sapphirerapids","modules": ["Python/3.12.3"]}],
+                    #"buildable": False,
                 },
                 "hwloc": {
-                    "externals": [{"spec": "hwloc@2.10.0", "prefix": "/software/rapids/r25.06/hwloc/2.10.0-GCCcore-13.3.0/"}],
-                    "buildable": False,
-                },
-                "gmake": {
-                    "externals": [{"spec": "gmake@4.2.1", "prefix": "/usr"}],
+                    "externals": [{"spec": "hwloc@2.10.0 arch=linux-rhel8-sapphirerapids", "modules": ["hwloc/2.10.0"]}],
                     "buildable": False,
                 },
                 "mpi": {
                     "buildable": False,
-                    "externals": [
-                        {
-                            "spec": "openmpi@5.0.3",
-                            "prefix": "/software/rapids/r25.06/OpenMPI/5.0.3-GCC-13.3.0/",
-                            #"extra_attributes": {
-                                #"ldflags": "-L/usr/tce/packages/mvapich2/mvapich2-2.3.7-gcc-12.1.1/lib -lmpi"
-                            #},
-                        }
-                    ],
-                }
+                    "externals": [{"spec": "openmpi@5.0.3%gcc@13.3.0 arch=linux-rhel8-sapphirerapids", "modules": ["OpenMPI/5.0.3"],}],
+                },
+                "tar": {
+                    "externals": [{"spec": "tar@1.30 arch=linux-rhel8-sapphirerapids", "prefix": "/usr"}],
+                    "buildable": False,
+                },
+                "autoconf": {
+                    "externals": [{"spec": "autoconf@2.69 arch=linux-rhel8-sapphirerapids", "prefix": "/usr"}],
+                    "buildable": False,
+                },
+                "gmake": {
+                    "externals": [{"spec": "gmake@4.2.1 arch=linux-rhel8-sapphirerapids", "prefix": "/usr"}],
+                    "buildable": False,
+                },
             }
         }
 
         return selections
-        
-    
+
     def compute_packages_section(self):
-        if "cluster=barnard" in self.spec.variants:
-            selections = self._barnard_packages
-        elif "cluster=romeo" in self.spec.variants:
-            selections = self._romeo_packages
+        if self._is("barnard"):
+            selections = self._barnard_packages()
+        elif self._is("romeo") in self.spec.variants:
+            selections = self._romeo_packages()
         else:
-           selections =  {}
+           print(f"{self.spec.variants=}",flush=True)
+           raise RuntimeError("No cluster match!!")
         return selections
 
     def compute_compilers_section(self):
         selections = {}
-        if "cluster=barnard" in self.spec.variants:
+        if self._is("barnard"):
             selections = {
                 "compilers": [
                     {
@@ -204,7 +190,7 @@ class ZihCluster(System):
                             "flags": {},
                             "operating_system": "rhel8",
                             "target": "x86_64",
-                            "modules": ["release/25.06","gompi/2024a"],
+                            "modules": ["release/25.06","gompi/2024a","Python/3.12.3","FFTW/3.3.10","CMake/3.29.3", "hwloc/2.10.0"],
                             "environment": {},
                             "extra_rpaths": [],
                         }
@@ -212,7 +198,7 @@ class ZihCluster(System):
                 ]
             }
         
-        if "cluster=romeo" in self.spec.variants:
+        if self._is("romeo"):
             selections = {
                 "compilers": [
                     {

@@ -23,7 +23,8 @@ class Saxpy(CMakePackage, CudaPackage, ROCmPackage):
 
     variant("openmp", default=True, description="Enable OpenMP support")
     variant("caliper", default=False, description="Enable Caliper monitoring")
-
+    variant("scorep", default=False, description="Enable Score-P support")
+    
     conflicts("+cuda", when="+rocm+openmp")
     conflicts("+rocm", when="+cuda+openmp")
     conflicts("+openmp", when="+rocm+cuda")
@@ -32,7 +33,8 @@ class Saxpy(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("mpi")
     depends_on("caliper", when="+caliper")
     depends_on("adiak", when="+caliper")
-
+    depends_on("scorep", when="+scorep")
+    
     @run_before("cmake")
     def stage_source(self):
         repo_path = os.path.dirname(spack.repo.PATH.package_path(self.name))
@@ -48,7 +50,15 @@ class Saxpy(CMakePackage, CudaPackage, ROCmPackage):
         spec = self.spec
         args = []
 
-        args.append('-DCMAKE_CXX_COMPILER={0}'.format(spec["mpi"].mpicxx))
+        #args.append('-DCMAKE_CXX_COMPILER={0}'.format(spec["mpi"].mpicxx))
+        if "+scorep" in self.spec:
+            mapping = {
+                "CMAKE_C":"mpicc",
+                "CMAKE_CXX": "mpic++",
+                "CMAKE_Fortran": "mpif90",
+            }
+            for k,v in mapping.items():
+                args.append(f"-D{k}_COMPILER=scorep-{v}")
 
         args.append(self.define_from_variant("USE_OPENMP", "openmp"))
         if '+cuda' in spec:

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 
-from spack_repo.builtin.build_systems.autotools import AutotoolsPackage
+#from spack_repo.builtin.build_systems.autotools import AutotoolsPackage
 
 from spack.package import *
 
@@ -71,10 +71,10 @@ class Otf2(AutotoolsPackage):
 
         return f"https://perftools.pages.jsc.fz-juelich.de/cicd/otf2/tags/otf2-{version}/otf2-{version}.tar.gz"
 
-    extends("python")
+    #extends("python")
 
     # `imp` module required
-    depends_on("python@:3.11", type=("build", "run"))
+    #depends_on("python@:3.11", type=("build")) #, "run"))
 
     with when("@2.2 %cce"):
         depends_on("autoconf", type="build")

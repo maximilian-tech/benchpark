@@ -5,7 +5,7 @@
 
 import os
 import platform
-
+from spack.util.environment import set_env
 from spack.package import *
 
 
@@ -29,7 +29,13 @@ class Hpcg(CMakePackage):
     depends_on("mpi@1.1:")
     depends_on("caliper", when="+caliper")
     depends_on("adiak", when="+caliper")
-    depends_on("scorep@9.99", when="+scorep")
+    depends_on("scorep", when="+scorep")
+    
+    def cmake(self, spec, prefix):
+        # Only the configure/generation step sees SCOREP_WRAPPER=off
+        with set_env(SCOREP_WRAPPER='off'):
+            super().cmake(spec, prefix)
+    
     def cmake_args(self):
         build_targets = ["all", "docs"]
         install_targets = ["install", "docs"]

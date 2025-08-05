@@ -15,7 +15,11 @@ class Scorep(AutotoolsPackage):
 
     homepage = "https://www.vi-hps.org/projects/score-p"
     url = "https://perftools.pages.jsc.fz-juelich.de/cicd/scorep/tags/scorep-7.1/scorep-7.1.tar.gz"
-    maintainers("wrwilliams")
+    
+    maintainers("maximilian-tech")
+    
+    version("9.3.0-dev-MR300", sha256="022ce38250f2a90cec484bd0718c61cdf771f50bd4a54b113647e2da42388d0e")
+    
     version("9.2", sha256="be3eaee99cdd0145e518c1aa959126df45e25b61579a007d062748b2844c499c")
     # 9.1 has a critical bug in Pthread instrumentation fixed by 9.2
     version(
@@ -84,6 +88,11 @@ class Scorep(AutotoolsPackage):
     )
 
     def url_for_version(self, version):
+        
+        if version == Version("9.3.0-dev-MR300"):
+            merge_request = "MR300"
+            return "https://perftools.pages.jsc.fz-juelich.de/cicd/scorep/branches/{0}/latest.tar.gz".format(merge_request)
+        
         if version < Version("7.0"):
             return "https://www.vi-hps.org/cms/upload/packages/scorep/scorep-{0}.tar.gz".format(
                 version
@@ -151,7 +160,7 @@ class Scorep(AutotoolsPackage):
 
     # SCOREP 8
     depends_on("binutils", type="link", when="@8:")
-    depends_on("otf2@3:", when="@8:")
+    depends_on("otf2@3:", when="@8:8")
     depends_on("cubew@4.8.2:4.8", when="@8.3:8")
     depends_on("cubelib@4.8.2:4.8", when="@8.3:8")
     depends_on("cubew@4.8", when="@8:8.2")
@@ -161,7 +170,7 @@ class Scorep(AutotoolsPackage):
     depends_on("otf2@2.3:2.3.99", when="@7.0:7")
     depends_on("cubew@4.6:4.7.99", when="@7.0:7")
     depends_on("cubelib@4.6:4.7.99", when="@7.0:7")
-    depends_on("opari2@2.0.6:", when="@7:")
+    depends_on("opari2@2.0.6:", when="@7:8")
     # SCOREP 6
     depends_on("otf2@2.2:", when="@6.0:6")
     # SCOREP 4 and 5
@@ -257,9 +266,17 @@ class Scorep(AutotoolsPackage):
                 "rocm", activation_value=lambda _: self.spec["hip"].prefix, variant="hip"
             )
         )
+        #config_args.extend(
+        #    self.with_or_without("libgotcha", activation_value="prefix", variant="gotcha")
+        #)
         config_args.extend(
-            self.with_or_without("libgotcha", activation_value="prefix", variant="gotcha")
+            self.with_or_without(
+                "libgotcha",
+                activation_value=lambda _: self.spec["gotcha"].prefix,
+                variant="gotcha",
+            )
         )
+        
         config_args.extend(self.enable_or_disable("llvm-plugin"))
         config_args.extend(self.enable_or_disable("gcc-plugin"))
         config_args.extend(self.enable_or_disable("mpi_f08"))
