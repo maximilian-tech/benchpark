@@ -31,6 +31,9 @@ class Hpcg(CMakePackage):
     depends_on("adiak", when="+caliper")
     depends_on("scorep", when="+scorep")
     
+    def setup_build_environment(self, env):
+        env.set("SCOREP_WRAPPER_INSTRUMENTER_FLAGS","--nocompiler")
+    
     def cmake(self, spec, prefix):
         # Only the configure/generation step sees SCOREP_WRAPPER=off
         with set_env(SCOREP_WRAPPER='off'):
