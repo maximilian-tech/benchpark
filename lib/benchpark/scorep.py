@@ -14,8 +14,12 @@ class Scorep:
         default="none",
         values=(
             "none",
-            "SCOREP_ENABLE_PROFILING",
-            "SCOREP_CUDA_ENABLE",
+            "profile",
+            "trace",
+            "io",
+            "memory",
+            #"cuda",
+            #"hip"
         ),
         multi=True,
         description="scorep mode",
@@ -49,7 +53,7 @@ class Scorep:
             # Set How Score-P shall be installed
             if not self.spec.satisfies("scorep=none"):
                 package_specs["scorep"] = {
-                    "pkg_spec": f"scorep@{scorep_version}",
+                    "pkg_spec": f"scorep@{scorep_version}", #ToDo. How do Include CUDA/HIP?
                     #"compiler": system_specs["compiler"],
                 }
                 pass
